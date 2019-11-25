@@ -17,6 +17,7 @@ What if A is null or A is of zero length? We should return -1 in this case.
 1. 注意corner case
 2. 经典二分查找是递增有序数组
 3. 双指针，收尾指，取中间值比大小，根据大小结果调整左右指针位置
+4. left right都是存储的index
 
 ```java
 public class Solution{
@@ -41,4 +42,5 @@ public class Solution{
     }
 }
 ```
+
 
