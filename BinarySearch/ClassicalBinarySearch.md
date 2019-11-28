@@ -1,4 +1,4 @@
-**Question:**  
+### Question:  
 Given a target integer T and an integer array A *sorted* in _ascending order_, find the index i such that A[i] == T or return -1 if there is no such index.
 
 Assumptions
