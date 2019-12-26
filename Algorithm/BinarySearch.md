@@ -61,14 +61,51 @@ public class Solution{
 > 1. 每一轮搜索空间要减少
 > 2. 目标值一定不在被抛弃的那一边
 
+``` java
+    
+```
+
+
 
 #### 1.3举一反一：closest element to target
 思路：找到target的左右边界  
+1. clarification: sorted, ascending, descending
+2. assumptions:
+    corner case: 
+    Multiple solutions(any)/null/empty
+
+Given a target integer T and an integer array A sorted in ascending order, find the index i in A such that A[i] is closest to T.
+
+Assumptions
+
+There can be duplicate elements in the array, and we can return any of the indices with same value.
+
 ```java
     //因为无法当场确定a[mid]是不是最优解，所以不能直接抛弃
-    while(left < right - 1)
-    left = mid; 
-    right = mid; 
+    public class Solution {
+        public int closest(int[] array, int target) {
+            if (array == null || array.length == 0) {
+                return -1;
+            }
+            int left = 0;
+            int right = array.length -1;
+            int mid;
+            while (left < right - 1) {
+                mid = left + (right - left) / 2;
+                if (array[mid] == target) {
+                    return mid;
+                } else if (array[mid] < target) {
+                    left = mid;
+                } else {
+                    right = mid;
+                }
+            }
+            if (Math.abs(array[left] - target) < Math.abs(array[right] - target)) {
+                return left;
+            } 
+            return right;
+        }
+    }
 ```
 
 #### 1.4 first target
@@ -86,6 +123,8 @@ array = {4 5 5 5 5 5 5 5 5}
 思路1：找到target左右边界，然后左右边轮流比较，两边开花(for循环k次)
 time = O(log(n) + k)
 思路2: 如果k很大，time就很大。（详见1.9）
+
+
 
 #### 1.7 Smallest element that is larger than target
 找到比target大的数中最小的值  
