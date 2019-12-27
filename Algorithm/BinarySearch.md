@@ -62,10 +62,38 @@ public class Solution{
 > 2. 目标值一定不在被抛弃的那一边
 
 ``` java
-    
+/*
+    Assumptions: 
+    1. Ascending order
+    2. No duplicate number
+*/
+public class Solution {
+    public int[] search(int[][] matrix, int target) {
+        if (matrix == null) {
+            return new int[]{-1, -1};
+        }
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        int left = 0;
+        int right = rows * cols - 1;
+        int mid;
+        while (left <= right) {
+            mid = left + (right - left) / 2;
+            int row = mid / cols;
+            int col = mid % cols;
+            if (matrix[row][col] == target) {
+                return new int[]{row, col};
+            } else if (matrix[row][col] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return new int[]{-1, -1};
+    }
+}
 ```
-
-
+**Conclusion**: 低级编译错误过多，注意变量的定义，名称以及返回值的类型。  
 
 #### 1.3举一反一：closest element to target
 思路：找到target的左右边界  
@@ -82,30 +110,30 @@ There can be duplicate elements in the array, and we can return any of the indic
 
 ```java
     //因为无法当场确定a[mid]是不是最优解，所以不能直接抛弃
-    public class Solution {
-        public int closest(int[] array, int target) {
-            if (array == null || array.length == 0) {
-                return -1;
-            }
-            int left = 0;
-            int right = array.length -1;
-            int mid;
-            while (left < right - 1) {
-                mid = left + (right - left) / 2;
-                if (array[mid] == target) {
-                    return mid;
-                } else if (array[mid] < target) {
-                    left = mid;
-                } else {
-                    right = mid;
-                }
-            }
-            if (Math.abs(array[left] - target) < Math.abs(array[right] - target)) {
-                return left;
-            } 
-            return right;
+public class Solution {
+    public int closest(int[] array, int target) {
+        if (array == null || array.length == 0) {
+            return -1;
         }
+        int left = 0;
+        int right = array.length -1;
+        int mid;
+        while (left < right - 1) {
+            mid = left + (right - left) / 2;
+            if (array[mid] == target) {
+                return mid;
+            } else if (array[mid] < target) {
+                left = mid;
+            } else {
+                right = mid;
+            }
+        }
+        if (Math.abs(array[left] - target) < Math.abs(array[right] - target)) {
+            return left;
+        } 
+        return right;
     }
+}
 ```
 
 #### 1.4 first target
@@ -114,15 +142,131 @@ array = {4 5 5 5 5 5 5 5 5}
 思路：第一次出现的一定靠left指针，右侧指针不能跳
 ；最后判断一定要先判断左，再判断右
 
+Given a target integer T and an integer array A sorted in ascending order, find the index of the first occurrence of T in A or return -1 if there is no such index.  
+
+Assuption: 
+1. Ascending order
+```java
+public class Solution {
+    public int firstOccur(int[] array, int target) {
+        if (array == null || array.length == 0) {
+            return -1;
+        }
+        int left = 0;
+        int right = array.length - 1;
+        int mid;
+        while (left < right - 1) {
+            mid = left + (right - left) / 2;
+            if (array[mid] == target) {
+                right = mid;
+            } else if (array[mid] < target) {
+                left = mid + 1; // left = mid is right too
+            } else {
+                right = mid - 1;
+            }
+        }
+        if (array[left] == target) {
+            return left;
+        } else if (array[right] == target) {
+            return right;
+        } else {
+            return -1;
+        }
+    } 
+}
+```
+
 
 #### 1.5 last target
 思路：跟1.4相反，首先最后的元素一定靠右，最后判断时先右后左
+```java
+public class Solution {
+    public int lastOccur(int[] array, int target) {
+        if (array == null || array.length == 0) {
+            return -1;
+        }
+        int left = 0;
+        int right = array.length - 1;
+        int mid;
+        while (left < right - 1) {
+            mid = left + (right - left) / 2;
+            if (array[mid] <= target) {
+                left = mid;
+            } else {
+                right = mid - 1;
+            }
+        }
+        if (array[right] == target) {
+            return right;
+        } else if (array[left] == target) {
+            return left;
+        } else {
+            return -1;
+        }
+    } 
+}
+```
+
 
 #### 1.6举一反二 Closest k elements
+
 找到离target最近的k个元素  
 思路1：找到target左右边界，然后左右边轮流比较，两边开花(for循环k次)
 time = O(log(n) + k)
 思路2: 如果k很大，time就很大。（详见1.9）
+
+用内部的方法找到比target小或者相等的最大值，然后以该值和其右侧的值为起点，左右开花找到k个最接近的值
+
+**Question:**  
+Given a target integer T, a non-negative integer K and an integer array A sorted in ascending order, find the K closest numbers to T in A.  
+
+**Assumptions**  
+- A is not null
+- K is guranteed to be >= 0 and K is guranteed to be <= A.length  
+**Return**  
+A size K integer array containing the K closest numbers(not indices) in A, sorted in ascending order by the difference between the number and T. 
+```java
+//assum array is not null
+public class Solution {
+    public int[] kClosest(int[] array, int target, int k) {
+        if (array.length == 0 || k == 0) {
+            return new int[]{}; 
+        }
+        int[] res = new int[k];
+        int left = findLargestSmallerIndex(array, target);
+        int right = left + 1;
+        for (int i = 0; i < k; i++) {
+            if (right >= array.length || left >= 0 && target - array[left] <= array[right] - target) {
+                res[i] = array[left--];
+            } else {
+                res[i] = array[right++];
+            }
+        }
+        return res;
+    }
+
+    private int findLargestSmallerIndex(int[] array, int target) {
+        int left = 0;
+        int right = array.length - 1;
+        int mid;
+        while (left < right - 1)  {
+            mid = left + (right - left) / 2;
+            if (array[mid] <= target) {
+                left = mid;
+            } else {
+                right = mid;
+            }
+        }
+        if (array[right] <= target) {
+            return right;
+        } else if (array[left] <= target){
+            return left;
+        } else {
+            return -1;
+        }   
+    }
+}
+```
 
 
 
@@ -131,7 +275,38 @@ time = O(log(n) + k)
 思路：类似于找first element
 因为比target大的最小值一定是靠右的，所有右侧指针比较特殊，最后判断先左后右。
 
-
+```java
+public class Solution {
+    public int smallestElementLargerThanTarget(int[] array, int target) {
+        if (array == null || array.length == 0) {
+            return -1;
+        }
+        int left = 0;
+        int right = array.length - 1;
+        int mid;
+        while (left < right - 1) {
+            mid = left + (right - left) / 2;
+            if (array[mid] <= target) {
+                left = mid;
+            } else {
+                right = mid;
+            }
+        }
+        int largestSmallerOrEqual = -1;
+        if (array[right] <= target ) {
+            largestSmallerOrEqual = right;
+        } else if (array[left] <= target ) {
+            largestSmallerOrEqual = left;
+        } 
+        
+        if (largestSmallerOrEqual + 1 <= array.length - 1) {
+            return largestSmallerOrEqual + 1;
+        } else {
+            return -1;
+        }
+    }
+}
+```
 #### 1.8举一反三 K-th smallest in two sorted arrays
 从两个有序数组中找到最小的k个值/第k小的值  
 思路：每次比较两个array中第k/2个值的大小
@@ -145,6 +320,44 @@ time = O(log(n) + k)
 思路：2倍jump，直到出界，然后做binary search  
 follow up：2倍好还是10倍好？  
 定量分析和定性分析时间复杂度。
+```java 
+    /*
+*  interface Dictionary {
+*    public Integer get(int index);
+*  }
+*/
+
+// You do not need to implement the Dictionary interface.
+// You can use it directly, the implementation is provided when testing your solution.
+public class Solution {
+    public int search(Dictionary dict, int target) {
+        if (dict == null) {
+            return -1;
+        }
+        int left = 0;
+        int right = 1;
+        while (dict.get(right) != null && dict.get(right) < target) {
+            left = right;
+            right = right * 2;
+        }
+        return binarySearch(dict, target, left, right);
+    }
+
+    private int binarySearch(Dictionary dict, int target, int left, int right) {
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (dict.get(mid) == null || dict.get(mid) > target) {
+                right = mid - 1;
+            } else if (dict.get(mid) < target) {
+                left = mid + 1;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
+    }
+}
+```
 
 
 
