@@ -6,4 +6,11 @@
  初步阶段目标：把laicode题刷一遍  
  进阶目标：转战leetcode
 
- [Binary Search](./Algorithm/BinarySearch.md)
+
+### 算法题分类
+ 1. [Binary Search](./Algorithm/BinarySearch.md)
+ 2. [Recursion & Sorting](./Algorithm/Recursion_Sorting.md)
+ 3. [LinkedList](./Algorithm/LinkedList.md)
+
+### 复习笔记
+1. [HashMap_HashSet](./Notes/Map_Set_Hash.md)
