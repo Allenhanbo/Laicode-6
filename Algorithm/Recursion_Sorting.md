@@ -21,7 +21,7 @@ public class Solution {
         } else if (K == 1) {
             return 1;
         }
-        return fibonacci(K-1) + fibonacci(K-2); //recursion rull
+        return fibonacci(K-1) + fibonacci(K-2); //recursion rule
     }
 }
 
