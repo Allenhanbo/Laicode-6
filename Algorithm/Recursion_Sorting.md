@@ -105,7 +105,7 @@ recursion, 谁小移谁
 上半分，下半合  
 time: O(n) + O(nlogn) = O(nlogn)  
 space: O(n), 还是看recursion的层数以及每一层用了多少额外空间(利用helper array可以减少额外空间使用)
-[![lnUKhV.md.png](https://s2.ax1x.com/2019/12/29/lnUKhV.md.png)](https://imgchr.com/i/lnUKhV)
+[![lnUKhV.md.png](https://s2.ax1x.com/2019/12/29/lnUKhV.md.png)]
 ```java
 public class Solution {
     public int[] mergeSort(int[] array) {
