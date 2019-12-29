@@ -8,8 +8,6 @@
 >time: 每一个step相加 O(2^n)  
 >space: 最多压栈多少层，recursion tree左侧直上直下的个数 O(n)   
 
-这一题
-
 ```java 
 //recursion way
 public class Solution {
