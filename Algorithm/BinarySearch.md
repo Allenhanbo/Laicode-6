@@ -116,7 +116,7 @@ public class Solution {
             return -1;
         }
         int left = 0;
-        int right = array.length -1;
+        int right = array.length - 1;
         int mid;
         while (left < right - 1) {
             mid = left + (right - left) / 2;
