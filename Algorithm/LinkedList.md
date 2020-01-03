@@ -13,7 +13,7 @@
     }
 ```
 
-#### Q1 Reverse a linked list
+#### Reverse a linked list
 **Iteration way**
 three pointers  
 prev, cur, next（物理意义）
@@ -61,16 +61,107 @@ public class Solution {
 }
 ```
 
-
-
-
-#### 举一反二：Q1 Find middle node of linked list
+#### Find middle node of linked list
 online vs offline  
 fast slow pointer  
 
+Find the middle node of a given linked list.
 
-#### Q4 Insert into a sorted linked list
-创建一个dummyHead   
-因为linked list的头有可能会发生改变，这样让dummyHead的数负无穷小，最后直接返回dummyHead.next
+Examples
 
+L = null, return null  
+L = 1 -> null, return 1  
+L = 1 -> 2 -> null, return 1  
+L = 1 -> 2 -> 3 -> null, return 2  
+L = 1 -> 2 -> 3 -> 4 -> null, return 2  
+
+
+Clarification: 
+1. which one is middle one(even/odd length), the former one is better
+2. null
+
+```java
+    /**
+ * class ListNode {
+ *   public int value;
+ *   public ListNode next;
+ *   public ListNode(int value) {
+ *     this.value = value;
+ *     next = null;
+ *   }
+ * }
+ */
+public class Solution {
+    public ListNode middleNode(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+}
+```
+1 2 3 5 
+    s
+        f
+
+
+#### Check if Linked list has a cycle
+```java
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        if (head == null) {
+            return false;
+        }
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+
+#### Insert into a sorted linked list
+option: 创建一个dummyHead,也可以不用dummyHead
+
+linked list的头有可能会发生改变，这样让dummyHead的数负无穷小，最后直接返回dummyHead.next
+
+两个case:
+case1: head == null || target <= head.value   
+case2: target > head.value
+
+注意clarification：升序或降序排列
+
+```java
+public class Solution {
+    public ListNode insert(ListNode head, int value) {
+        ListNode newNode = new ListNode(value);
+        //case 1
+        if (head == null || value <= head.value) {
+            newNode.next = head;
+            return newNode;
+        }
+        //case 2
+        ListNode prev = head;
+        while (prev.next != null && prev.next.value < value) {
+            prev = prev.next;
+        }
+        newNode.next = prev.next;
+        prev.next = newNode;
+        return head;
+    }
+}
+```
 
