@@ -1,4 +1,4 @@
-### LinkedList
+## LinkedList
 1. 防止NPE  
 2. 不要丢掉head节点  
 ```java
@@ -13,7 +13,7 @@
     }
 ```
 
-#### Reverse a linked list
+### Reverse a linked list
 **Iteration way**
 three pointers  
 prev, cur, next（物理意义）
@@ -61,7 +61,7 @@ public class Solution {
 }
 ```
 
-#### Find middle node of linked list
+### Find middle node of linked list
 online vs offline  
 fast slow pointer  
 
@@ -111,7 +111,7 @@ public class Solution {
         f
 
 
-#### Check if Linked list has a cycle
+### Check if Linked list has a cycle
 ```java
 public class Solution {
     public boolean hasCycle(ListNode head) {
@@ -133,7 +133,7 @@ public class Solution {
 ```
 
 
-#### Insert into a sorted linked list
+### Insert into a sorted linked list
 option: 创建一个dummyHead,也可以不用dummyHead
 
 linked list的头有可能会发生改变，这样让dummyHead的数负无穷小，最后直接返回dummyHead.next
@@ -165,3 +165,119 @@ public class Solution {
 }
 ```
 
+### Merge two sorted linked lists
+**谁小移谁**  
+The head of linked list would be changed, so a dummy head will be better  
+
+```java
+public class Solution {
+    public ListNode merge(ListNode one, ListNode two) {
+        // if (one == null) {
+        //     return two;
+        // } else if (two == null) {
+        //     return one;
+        // }
+        //上面判断的corner case没有必要，因为在下面的代码中会处理
+        ListNode dummyHead = new ListNode(0);
+        ListNode cur = dummyHead;
+        while (one != null && two != null) {
+            if (one.value <= two.value) {
+                cur.next = one;
+                one = one.next;
+            } else {
+                cur.next = two;
+                two = two.next;
+            }
+            cur = cur.next;
+        }
+        if (one == null) {
+            cur.next = two;
+        } else if (two == null){
+            cur.next = one;
+        }
+        return dummyHead.next;
+    }
+}
+```
+
+### Reorder Linked List
+Reorder the given singly-linked list 
+N1 -> N2 -> N3 -> N4 -> … -> Nn -> null to be   
+N1- > Nn -> N2 -> Nn-1 -> N3 -> Nn-2 -> … -> null    
+
+这题是hard题，主要是考察多种基本操作  
+基本解题思路如下：  
+
+1. 找到LL的中点(奇数靠前一个)
+2. 反转后半部分的链表
+3. Merge two LLs
+
+1 2 3 4  
+  s
+    f
+```java
+public class Solution {
+    public ListNode reorder(ListNode head) {
+        //corner case
+        if (head == null || head.next == null) {
+            return head;
+        }
+        //slow -> the middle node, divide the LL into two LLs
+        ListNode mid = findMiddle(head);
+        ListNode one = head;
+        ListNode two = mid.next;
+        mid.next = null;
+        return merge(one, reverse(two));
+
+    }
+
+    private ListNode findMiddle(ListNode head) {
+        //find the middle one
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+    private ListNode reverse(ListNode two) {
+        //Reverse LL two;
+        ListNode prev = null;
+        ListNode cur = two;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        //at this time, the new head should be prev, cur is null
+        //two = prev;
+        //return two;
+        return prev;
+    }
+
+    private ListNode merge(ListNode one, ListNode two) {
+        //Merge two LLs
+        ListNode dummyHead = new ListNode(0);
+        ListNode cur = dummyHead;
+        while (one != null && two != null) {
+            cur.next = one;
+            one = one.next;
+            cur.next.next = two;
+            two = two.next;
+            cur = cur.next.next;
+        }
+        if (one == null) {
+            cur.next = two;
+        } else {
+            cur.next = one;
+        }
+        return dummyHead.next;
+    }
+}
+```
+
+1   2   4
+  
+3   6   7
