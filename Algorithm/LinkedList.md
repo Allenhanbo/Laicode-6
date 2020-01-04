@@ -281,3 +281,226 @@ public class Solution {
 1   2   4
   
 3   6   7
+
+### Partition Linked List
+Given a linked list and a target value T, partition it such that all nodes less than T are listed before the nodes larger than or equal to target value T. The original relative order of the nodes in each of the two partitions should be preserved.
+
+Examples
+
+L = 2 -> 4 -> 3 -> 5 -> 1 -> null, T = 3, is partitioned to   
+2 -> 1 -> 4 -> 3 -> 5 -> null
+
+解题思路：用两个dummyHeads，分别引导小于target或者大于等于target的数，注意保存一个tail指针
+
+```java
+public class Solution {
+    public ListNode partition(ListNode head, int target) {
+        //corner case
+        if (head == null) {
+            return head;
+        }
+        ListNode smallHead = new ListNode(0);
+        ListNode largeHead = new ListNode(0);
+        ListNode smallTail = smallHead;
+        ListNode largeTail = largeHead;
+        ListNode cur = head;
+        while (cur != null) {
+            if (cur.value < target) {
+                smallTail.next = cur;
+                smallTail = smallTail.next;
+            } else {
+                largeTail.next = cur;
+                largeTail = largeTail.next;
+            }
+            cur = cur.next;
+        }
+        smallTail.next = largeHead.next;
+        largeTail.next = null; //防止链表中有环
+        return smallHead.next;
+    }
+}
+```
+
+### Merge Sort LinkedList
+解题思路：  
+**recursion**
+1. split LL into two halves(findMiddle)
+2. Sort each half (recursion)
+3. merge two halves
+
+```java
+public class Solution {
+    public ListNode mergeSort(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode middle = findMiddle(head);
+        ListNode middleNext = middle.next;
+        middle.next = null;
+
+        ListNode left = mergeSort(head);
+        ListNode right = mergeSort(middleNext);
+
+        return merge(left, right);
+    }
+
+    private ListNode findMiddle(ListNode head) {
+        //find the middle one
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    private ListNode merge(ListNode one, ListNode two) {
+        ListNode dummyHead = new ListNode(0);
+        ListNode cur = dummyHead;
+        while (one != null && two != null) {
+            if (one.value <= two.value) {
+                cur.next = one;
+                one = one.next;
+            } else {
+                cur.next = two;
+                two = two.next;
+            }
+            cur = cur.next;
+        }
+        if (one == null) {
+            cur.next = two;
+        } else if (two == null){
+            cur.next = one;
+        }
+        return dummyHead.next;
+    }
+}
+```
+
+
+### Add two numbers
+You are given two linked lists representing two non-negative numbers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.  
+
+**Example**  
+Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)  
+Output: 7 -> 0 -> 8
+
+思路：两个数从个位数开始相加
+举一反三：如果直接给两个数，要先reverse，再相加，最后再reverse回来。
+```java
+public class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        } else if (l2 == null) {
+            return l1;
+        }
+        ListNode dummyHead = new ListNode(0);
+        ListNode cur = dummyHead;
+        int val = 0;
+        while (l1 != null || l2 != null || val != 0) {
+            if (l1 != null) {
+                val += l1.value;
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                val += l2.value;
+                l2 = l2.next;
+            }
+            cur.next = new ListNode(val % 10);
+            val = val / 10;
+            cur = cur.next;
+        }
+        return dummyHead.next;
+    }
+}
+```
+
+
+### Check If Linked List Is Palindrome
+是否是回文数  
+思路：找重点，reverse，比较
+```java
+public class Solution {
+    public boolean isPalindrome(ListNode head) {
+        //corner case
+        if (head == null || head.next == null) {
+            return true;
+        }
+        ListNode middle = findMiddle(head);
+        ListNode middleNext = reverse(middle.next);
+        //middle.next = null;
+        return checkPalindrome(head, middleNext);
+        
+
+    }
+
+    private ListNode findMiddle(ListNode head) {
+        //find the middle one
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    private ListNode reverse(ListNode a) {
+        //Reverse LL two;
+        ListNode prev = null;
+        ListNode cur = a;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+    }
+
+    private boolean checkPalindrome(ListNode a, ListNode b) {
+        //注意：找中点分为两部分LL后，后面的链表长度一定是小于或等于前面的链表长度，
+        //所以只用check后面链表是否为null，并且如果是奇数长度，最后一个值无需检查，
+        //只需要检查它前面一一对应的两个值是否相等
+        while (b != null) {
+            if (a.value != b.value) {
+                return false;
+            }
+            a = a.next;
+            b = b.next;
+        }
+        return true;
+    }
+}
+```
+
+### Remove Linked List Elements
+Remove all elements from a linked list of integers that have value val.
+
+Example  
+Given: 1 --> 2 --> 6 --> 3 --> 4 --> 5 --> 6, val = 6  
+Return: 1 --> 2 --> 3 --> 4 --> 5
+
+```java
+public class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        if (head == null) {
+            return head;
+        }
+        ListNode dummyHead = new ListNode(0);
+        dummyHead.next = head;
+        ListNode prev = dummyHead;
+        while (head != null) {
+            if (head.value == val) {
+                prev.next = head.next;
+            } else {
+                prev = head;
+            }
+            head = head.next;
+        }
+        return dummyHead.next;
+    }
+}
+```
