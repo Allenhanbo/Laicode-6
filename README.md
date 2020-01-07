@@ -12,6 +12,7 @@
  2. [Recursion & Sorting](./Algorithm/Recursion_Sorting.md)
  3. [LinkedList](./Algorithm/LinkedList.md)
  4. [Queue & Stack](./Algorithm/Queue_Stack.md)
+ 5. [Binary Tree](./Algorithm/BinaryTree.md)
 
 ### 复习笔记
 1. [HashMap_HashSet](./Notes/Map_Set_Hash.md)
