@@ -79,6 +79,7 @@ public class Solution {
         int mid;
         while (left <= right) {
             mid = left + (right - left) / 2;
+            //注意matrix是一个二维矩阵，时刻需要知道row和col才能读取里面的数值
             int row = mid / cols;
             int col = mid % cols;
             if (matrix[row][col] == target) {
@@ -175,8 +176,6 @@ public class Solution {
     } 
 }
 ```
-
-
 #### 1.5 last target
 思路：跟1.4相反，首先最后的元素一定靠右，最后判断时先右后左
 ```java
@@ -292,17 +291,12 @@ public class Solution {
                 right = mid;
             }
         }
-        int largestSmallerOrEqual = -1;
-        if (array[right] <= target ) {
-            largestSmallerOrEqual = right;
-        } else if (array[left] <= target ) {
-            largestSmallerOrEqual = left;
-        } 
-        
-        if (largestSmallerOrEqual + 1 <= array.length - 1) {
-            return largestSmallerOrEqual + 1;
+        if (array[left] > target) {
+	        return left;
+        } else if (array[right] > target) {
+	        return right;
         } else {
-            return -1;
+	        return -1;
         }
     }
 }
@@ -342,7 +336,7 @@ public class Solution {
         }
         return binarySearch(dict, target, left, right);
     }
-
+    
     private int binarySearch(Dictionary dict, int target, int left, int right) {
         while (left <= right) {
             int mid = left + (right - left) / 2;
