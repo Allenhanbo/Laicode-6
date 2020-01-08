@@ -15,4 +15,6 @@
  5. [Binary Tree](./Algorithm/BinaryTree.md)
 
 ### 复习笔记
-1. [HashMap_HashSet](./Notes/Map_Set_Hash.md)
+1. [HashMap HashSet](./Notes/Map_Set_Hash.md)
+2. [Binary Tree](./Notes/BinaryTree.md)
+3. [Graph](./Notes/Graph.md)
