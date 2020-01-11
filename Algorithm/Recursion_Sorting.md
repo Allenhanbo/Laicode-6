@@ -156,15 +156,13 @@ select pivot
 每次做完一轮，pivot就到了自己应该在的位置  
 挡板法：两个挡板，三个区域，规定好三个区域的物理意义  
 [0..i): 比pivot小的数  
-[i..j]: 为探索区域  
+[i..j]: 未探索区域  
 (j..n-1]: 比pivot大的数  
 
 **worse case**:  
 time: O(n^2), space: O(n)  
 **average**:  
-time:O(nlog n), space: O(logn)
-
-
+time:O(nlogn), space: O(logn)
 ```java
 public class Solution {
     public int[] quickSort(int[] array) {
@@ -252,10 +250,10 @@ public class Solution {
 
 #### Q8 Rainbow Sort
 三个挡板，四个区域
-[..i):  
-[i..j): 
-[j..k]: 
-(k..n]: 
+[..i):  -1
+[i..j): 0
+[j..k]: 未探索区域
+(k..n]: 1
 ```java
 public class Solution {
     public int[] rainbowSort(int[] array) {

@@ -170,7 +170,6 @@ public class Solution {
 }
 ```
 
-
 ### Tweaked Identical Binary Trees
 ```java
 public class Solution {
@@ -237,4 +236,243 @@ public class Solution {
         }
     }
 }
-```·
+```
+### Search in BST
+```java
+//TreeNode
+public class TreeNode {
+    public int key;
+    public TreeNode left;
+    public TreeNode right;
+    public TreeNode(int key) {
+        this.key = key;
+    }
+ }
+//recursion
+//尾递归，最后一步调用自己，其实没有必要压栈浪费空间，可以转变为iteration
+public TreeNode search(TreeNode root, int key) {
+    //base case
+    if (root == null || root.key == key) {
+        return root;
+    }
+    if (root.key < key) {
+        return root = search(root.right, key);
+    } else {
+        return root = search(root.left, key);
+    }
+}
+//iteration
+public TreeNode search(TreeNode root, int key) {
+    if (root == null) {
+        return null;
+    }
+    while (root != null) {
+        if (key < root.key) {
+            root = root.left;
+        } else if (key == root.key) {
+            return root;
+        } else {
+            root = root.right;
+        }
+    }
+    return null;
+}
+```
+
+### Insert in BST
+```java 
+//Iteration
+public TreeNode insert(TreeNode root, int target) {
+    if (root == null) {
+        return new TreeNode(target);
+    }
+    TreeNode returnRoot = root;//根节点会发生改变，需要记录
+    TreeNode pre = null;
+    while (root != null) {
+        pre = root;
+        if (target < root.key) {
+            root = root.left;
+        } else if (target > root.key) {
+            root = root.right;
+        } else { //如果已经存在了就不插入，直接返回要
+            return returnRoot;
+        }
+    }
+    if (target < pre.key) {
+        pre.left = new TreeNode(target);
+    } else {
+        pre.right = new TreeNode(target);
+    }
+    return returnRoot;
+}
+
+//recursion
+public TreeNode insert(TreeNode root, int target) {
+    if (root == null) {
+        return new TreeNode(target);
+    }
+    if (target < root.key) {
+        root.left = insert(root.left, target);
+    } else if (target > root.key) {
+        root.right = insert(root.right, target);
+    }
+    return root;
+}
+```
+
+### Delete in BST
+逻辑比较复杂，需要分很多不同的case讨论  
+
+case 1: the deleting node has not child  
+case 2: the deleting node has only left child  
+case 3: the deleting node has only right child  
+case 4: has both child（需要决定谁来上位，并继承原来node的最右子树）  
+一般来讲，都是选择该node右子树的最小值来上位，也就是右子树最左下角的node  
+case 4.1: the deleting node的右孩子没有左孩子，也就是说右孩子就是最小的那个  
+case 4.2: the deleting node的右孩子有左孩子，那就要继续往下找，直到找到没有左孩子的那个，就是最小的 
+```java
+public class Solution {
+    public TreeNode deleteTree(TreeNode root, int key) {
+        //base case
+        if (root == null) {
+            return null;
+        }
+        //首先要找到该Node，利用search的递归方法
+        if (key < root.key) {
+            root.left = deleteTree(root.left, key);
+            return root;
+        } else if (key > root.key) {
+            root.right = deleteTree(root.right, key);
+            return root;
+        }
+        //运行到这里的时候，说明上面的if block都不符合，
+        //也就说明在这一层stack中，root就是该node
+        //然后下面就可以对不同的case进行操作
+        //case 1,2,3
+        if (root.left == null) {
+            return root.right;
+        } else if (root.right == null) {
+            return root.left;
+        }
+        //能运行到这一步，说明该node左右孩子都不是null
+        //case 4.1
+        if (root.right.left == null) {
+            //首先要处理要删除node的左子树，把它挂到要继位的那个子树左侧
+            root.right.left = root.left; 
+            //然后返回要继位的那个node
+            return root.right;
+        }
+        //case 4.2
+        //利用一个内部方法，去找到右子树中最小的那个
+        TreeNode smallNode = findSmallNode(root.right);
+        smallNode.left = root.left;
+        smallNode.right = root.right;
+        return smallNode;
+    }
+    private TreeNode findSmallNode(TreeNode cur) {
+        TreeNode prev = null; //记录cur的parent node
+        while (cur.left != null) {
+            prev = cur;
+            cur = cur.left;
+        }
+        prev.left = cur.right;
+        return cur;
+    }
+}
+```
+
+### Iterative pre-order traversal BST
+**pop栈顶，左进去，右进去**
+```java
+public class Solution {
+    public List<Integer> preOrder(TreeNode root) {
+        List<Integer> preOrder = new ArrayList<>();
+        if (root == null) {
+            return preOrder;
+        }
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        stack.offerFirst(root);
+        while (!stack.isEmpty()) {
+            TreeNode cur = stack.pollFirst();
+            preOrder.add(cur.key);
+            if (cur.right != null) {
+                stack.offerFirst(cur.right);
+            } //BugHistory：这两个if一定要分开写，逻辑上是并列的
+            if (cur.left != null) {
+                stack.offerFirst(cur.left);
+            }
+        }
+        return preOrder;
+    }
+}
+```
+
+### Iterative in-order traversal BST
+helper的作用就是提前看前面一个，根据前面一个是什么，来决定下面做什么。  
+如果前面一个是不是空，就一直往左下走；走到前面一个是空了，说明左子树走完了，弹栈，打印，然后走到打印出来的右子树，继续上面的操作。  
+stack则一直保留着每一层的root，来记录等下回来的时候到哪一个root
+```java
+public class Solution {
+    public List<Integer> inOrder(TreeNode root) {
+        List<Integer> inOrder = new ArrayList<>();
+        if (root == null) {
+            return inOrder;
+        }
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        TreeNode helper = root;
+        while (helper != null || !stack.isEmpty()) {
+            if (helper != null) {
+                stack.offerFirst(helper);
+                helper = helper.left;
+            } else {
+                helper = stack.pollFirst();
+                inOrder.add(helper.key);
+                helper = helper.right;
+            }
+        }
+        return inOrder;
+    }
+}
+```
+
+### Iterative post-order traversal BST
+```java
+public class Solution {
+    public List<Integer> postOrder(TreeNode root) {
+        List<Integer> postOrder = new ArrayList<>();
+        if (root == null) {
+            return postOrder;
+        }
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        //记录一个prev，初始化为null
+        TreeNode prev = null;
+        //stack先把root放进去
+        stack.offerFirst(root);
+
+        while (!stack.isEmpty()) {
+            //不能直接pop，因为root要最后打印
+            TreeNode current = stack.peekFirst(); 
+            //case1，需要going down的情况
+            if (prev == null || current == prev.left || current == prev.right) {
+                if (current.left != null) {
+                    stack.offerFirst(current.left);
+                } else if (current.right != null) {
+                    stack.offerFirst(current.right);
+                } else {
+                    postOrder.add(stack.pollFirst().key);
+                }
+            } else if (prev == current.left) { //case2:
+                if (current.right != null) {
+                    stack.offerFirst(current.right);
+                } else {
+                    postOrder.add(stack.pollFirst().key);
+                }
+            } else { //case3: prev = current.right
+                postOrder.add(stack.pollFirst().key);
+            }
+            prev = current;
+        }
+        return postOrder;
+    }
+}
+```
