@@ -268,11 +268,10 @@ public class Solution {
             two = two.next;
             cur = cur.next.next;
         }
-        if (one == null) {
+        //只需要check one因为one的长度一定是大于或等于two的，只可能one不是null
+        if (one != null) { 
             cur.next = two;
-        } else {
-            cur.next = one;
-        }
+        } 
         return dummyHead.next;
     }
 }
@@ -432,10 +431,8 @@ public class Solution {
         ListNode middleNext = reverse(middle.next);
         //middle.next = null;
         return checkPalindrome(head, middleNext);
-        
-
     }
-
+    
     private ListNode findMiddle(ListNode head) {
         //find the middle one
         ListNode slow = head;
@@ -459,7 +456,6 @@ public class Solution {
         }
         return prev;
     }
-
     private boolean checkPalindrome(ListNode a, ListNode b) {
         //注意：找中点分为两部分LL后，后面的链表长度一定是小于或等于前面的链表长度，
         //所以只用check后面链表是否为null，并且如果是奇数长度，最后一个值无需检查，

@@ -13,8 +13,10 @@
  3. [LinkedList](./Algorithm/LinkedList.md)
  4. [Queue & Stack](./Algorithm/Queue_Stack.md)
  5. [Binary Tree](./Algorithm/BinaryTree.md)
+ 6. [Heap & Graph](./Algorithm/Heap_Graph.md)
 
 ### 复习笔记
 1. [HashMap HashSet](./Notes/Map_Set_Hash.md)
 2. [Binary Tree](./Notes/BinaryTree.md)
 3. [Graph](./Notes/Graph.md)
+4. [Heap](./Notes/Heap.md)

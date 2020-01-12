@@ -8,5 +8,5 @@
 3. Binary search tree：对任意node，其左子树的node都比它小，右子树都比它大，没有重复元素（如果有重复，可以counter记录在node里面）
     - 如果in-order打印一个BST，一定是升序排列的有序数组
 
-[![lrIV1A.md.png](https://s2.ax1x.com/2020/01/06/lrIV1A.md.png)]()
+![lrIV1A.md.png](https://s2.ax1x.com/2020/01/06/lrIV1A.md.png)()
 

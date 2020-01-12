@@ -7,5 +7,4 @@ Emin = 0
 Emax = V*(V-1) -> O(V^2)  
 
 图有不同的表示方式  
-`List<List<Integer>>` --> 表示一个图
-
+`List<List<Integer>>` -> 表示一个图
