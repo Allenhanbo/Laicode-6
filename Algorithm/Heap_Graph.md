@@ -183,7 +183,7 @@ public class Solution {
         Cell firstCell = new Cell(0,0,matrix[0][0]);
         visited[0][0] = true;
         minHeap.offer(firstCell);
-        for (int i = 0; i < k - 1; i++) {
+        for (int i = 0; i < k - 1; i++) { //注意这里的k - 1，因为最小的元素就是matrix[0][0]已经放进去的元素了
             Cell curr = minHeap.poll();
             if (curr.row + 1 < rows && !visited[curr.row + 1][curr.col]) {
                 minHeap.offer(new Cell(curr.row + 1, curr.col, matrix[curr.row + 1][curr.col]));
@@ -209,7 +209,4 @@ public class Solution {
         }
     }
 }
-
 ```
-
-

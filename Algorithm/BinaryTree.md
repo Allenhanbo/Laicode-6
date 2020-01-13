@@ -226,7 +226,7 @@ public class Solution {
             return;
         }
         if (root.key > min) {
-            getRange(root.left, min, max, list);
+            getRange(root.left,m min, max, list);
         }
         if (root.key >= min && root.key <= max) {
             list.add(root.key);
@@ -375,6 +375,7 @@ public class Solution {
             prev = cur;
             cur = cur.left;
         }
+        //要记得把最小node的右子树接到它父节点左侧
         prev.left = cur.right;
         return cur;
     }
@@ -446,7 +447,7 @@ public class Solution {
         Deque<TreeNode> stack = new ArrayDeque<>();
         //记录一个prev，初始化为null
         TreeNode prev = null;
-        //stack先把root放进去
+        //initial state: stack先把root放进去
         stack.offerFirst(root);
 
         while (!stack.isEmpty()) {
@@ -461,7 +462,7 @@ public class Solution {
                 } else {
                     postOrder.add(stack.pollFirst().key);
                 }
-            } else if (prev == current.left) { //case2:
+            } else if (prev == current.left) { //case2
                 if (current.right != null) {
                     stack.offerFirst(current.right);
                 } else {

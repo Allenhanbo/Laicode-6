@@ -26,7 +26,6 @@ public stack {
 }
 ```
 
-
 ### How to sort number with two stacks
 1. one sentence high level -> selection sort
 2. data structure
@@ -42,7 +41,7 @@ public class Solution {
         if (s1 == null || s1.size() <= 1) {
             return;
         }
-        LinkedList<Integer> s2 = new LinkedList<Integer>();
+        Deque<Integer> s2 = new ArrayDeque<Integer>();
         //s1 is input
         //s2 is both output and buffer
         sort(s1, s2);    
@@ -107,9 +106,11 @@ public class Solution {
         }
         return output.pollFirst();
     }
+
     public void offer(int element) {
         input.offerFirst(element);        
     }
+
     public Integer peek() {
         if (output.size() == 0) {
             while (!input.isEmpty()) {
@@ -118,9 +119,11 @@ public class Solution {
         }
         return output.peekFirst();
     }
+
     public int size() {
         return input.size() + output.size();
     }
+
     public boolean isEmpty() {
         return this.size() == 0;
     }
@@ -189,11 +192,11 @@ public class Solution {
 ```java
 class Solution {
     private Queue<Integer> q1;
-    private Queue<Integer> q2;
+    //private Queue<Integer> q2;
 
     public Solution() {
         q1 = new ArrayDeque<>();
-        q2 = new ArrayDeque<>();
+        //q2 = new ArrayDeque<>();
     }
 
     /** Push element x onto stack. */
@@ -206,13 +209,11 @@ class Solution {
         if (q1.size() == 0) {
             return null;
         }
-        while (q1.size() > 1) {
-            q2.offer(q1.poll());
+        int originalSize = q1.size();
+        for (int i = 0; i < originalSize - 1; i++) {
+            q1.offer(q1.poll());
         }
         int res = q1.poll();
-        Queue<Integer> temp = q1;
-        q1 = q2;
-        q2 = temp;
         return res;
     }
 
