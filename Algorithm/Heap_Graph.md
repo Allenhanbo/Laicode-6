@@ -10,14 +10,14 @@ public class Solution {
         if (array.length == 0 || k == 0) {
             return new int[0];
         }
-        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(k, new Comparator<Integer>() {
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(k, new Comparator<Integer>() {//<>不能少
             @Override
             public int compare(Integer o1,Integer o2) {
                 //要用equals比较
                 if (o1.equals(o2)) {
                     return 0;
                 }
-                return o1 > o2 ? -1 : 1;
+                return o1 > o2 ? -1 : 1; //BugHistory: 要记住谁的优先级更高
             }
         });
         for (int i = 0; i < array.length; i++) {
@@ -29,6 +29,7 @@ public class Solution {
             }
         }
         //要返回一下sort好的数组，注意从后往前写入array，因为是maxHeap
+        //BugHistory,注意写入的顺序
         int[] res = new int[k];
         for (int i = k - 1; i >= 0; i--) {
             res[i] = maxHeap.poll();
@@ -109,7 +110,7 @@ public class Solution {
             for (GraphNode nei : curr.neighbors) {
                 if (!visited.containsKey(nei)) {
                     visited.put(nei, neiGroup); //map往里放是put
-                    queue.offer(nei);
+                    queue.offer(nei);// BugHistory：不能忘记map和queue都要往里放
                 } else if (visited.get(nei) == curGroup) {
                     return false;
                 }
@@ -210,3 +211,5 @@ public class Solution {
     }
 }
 ```
+
+
