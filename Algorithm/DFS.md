@@ -83,7 +83,7 @@ public class Solution {
         List<List<Integer>> list = new ArrayList<>();
         List<Integer> curr = new ArrayList<>();
         helper(coins, target, 0, curr, list);
-        return list;
+        return list; // 不要忘记return
     }
 
     private void helper(int[] coins, int moneyLeft, int index, List<Integer> curr, List<List<Integer>> list) {
@@ -117,12 +117,12 @@ public class Solution {
         }
         char[] inputChar = input.toCharArray();
         helper(inputChar, 0, list);
-        return list;
+        return list;//不要忘记return
     }
 
     private void helper(char[] array, int index, List<String> list) {
         //corcer case + base case
-        if (array.length == 0 || index == array.length - 1) {
+        if (array.length == 0 || index == array.length - 1) { //index == array.length也可以
             list.add(new String(array));
             return;
         }
