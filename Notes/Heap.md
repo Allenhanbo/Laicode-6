@@ -40,21 +40,32 @@ public class MinHeap {
     }
 
     private void percolateUp(int index) {
-        int parentIndex = (index - 1) / 2;
-        while (array[index] < array[parentIndex]) {
-            swap(array, index, parentIndex);
+        while (index > 0) {
+            int parentIndex = (index - 1) / 2;
+            if (array[parentIndex] > array[index]) {
+                swap(array, parentIndex, index);
+            } else {
+                break;
+            }
             index = parentIndex;
-            parentIndex = (index - 1) / 2;
         }
     }
 
     private void percolateDown(int index) {
-        int leftChildIndex = index * 2 + 1;
-        int rightChildIndex = index * 2 + 2;
-
-    }
-    private int findMinIndex(int parent, int left, int right) {
-        
+        while (index <= size / 2 - 1) {
+            int leftChildIndex = index * 2 + 1;
+            int rightChildIndex = index * 2 + 2;
+            int candidate = leftChildIndex;
+            if (rightChildIndex <= size - 1 && array[leftChildIndex] >= array[rightChildIndex]) {
+                candidate = rightChildIndex;
+            }
+            if (array[index] > array[candidate]) {
+                swap(array, index, candidate);
+            } else {
+                break;
+            }
+            index = candidate;
+        }
     }
 
     private void swap (int[] array, int a, int b) {
