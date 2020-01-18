@@ -419,7 +419,7 @@ public class Solution {
 
 ### Check If Linked List Is Palindrome
 是否是回文数  
-思路：找重点，reverse，比较
+思路：找中点，reverse，比较
 ```java
 public class Solution {
     public boolean isPalindrome(ListNode head) {
