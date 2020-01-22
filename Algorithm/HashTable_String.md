@@ -35,6 +35,7 @@ public class Solution {
             }
         }
 
+        //BugHistory：此处for loop要注意，用minHeap的size而不是k，因为k有可能比输入中元素的种类要多
         String[] res = new String[minHeap.size()];
         for (int i = minHeap.size() - 1; i >= 0; i--) {
             res[i] = minHeap.poll().getKey();
@@ -179,6 +180,7 @@ public class Solution {
                 array[end++] = array[i];
             }
         }
+        //BugHistory: 一定要check end是否大于0，否则会出现NPE的情况
         if (end > 0 && array[end - 1] == ' ') {
             end--;
         }
@@ -235,6 +237,7 @@ public class Solution {
                 array[end] = array[i];
             } else {//相同的情况，要stack pop一个，也就是end--，然后i移到相同的最后一个元素；
                 end--;
+                //BugHistory:要先check i+1有没有出界，否则会NPE
                 while (i + 1 < array.length && array[i + 1] == array[i]) {
                     i++;
                 }
