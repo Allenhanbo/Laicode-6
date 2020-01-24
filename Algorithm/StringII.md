@@ -23,12 +23,16 @@ public class Solution {
 ```
 
 ### Reverse Words In A Sentence I
+考虑两件事：
+1. 什么时候slow指针要定位到初始位置
+2. 什么时候fast指针到结尾要reverse
 ```java
 /**
     先把整个句子reverse一遍，再对里面的每个单词都reverse
     reverse句子则用in-place的收尾双指针交换来reverse
     对于句子内部的单词，用两个指针同时出发，让快指针寻找空格的位置，在进行inplace的reverse，
     tips：在一个单词reverse完成后，两个指针的位置都要更新到j+1的位置，即空格的后一位
+    
 */
 public class Solution {
     public String reverseWords(String input) {
@@ -134,7 +138,6 @@ public class Solution {
             return longerOperation(inputArray, sourceArray, targetArray);
         }
     }
-
     /**
      * source.length >= target.length
      */
@@ -171,12 +174,10 @@ public class Solution {
                 counter++;
             }
         }
-
         //优化：如果没有substring，直接返回
         if (counter == 0) {
             return new String(inputArray);
         }
-        
         //新建一个增长的array
         char[] newInput = new char[inputArray.length + counter * (targetArray.length - sourceArray.length)];
 
@@ -197,7 +198,6 @@ public class Solution {
         reverse(newInput, 0, newInput.length - 1);
         return new String(newInput);
     }
-
     /**
      * Check if it's a substring
      */
