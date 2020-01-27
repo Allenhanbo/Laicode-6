@@ -18,6 +18,8 @@
  8. [HashTable & String](Algorithm/HashTable_String.md)
  9. [String II](Algorithm/StringII.md)
  10. [DP](Algorithm/DP.md)
+ 11. [Bit Operation](Algorithm/Bit.md)
+ 12. [Cross-training I](Algorithm/CrossTrainning1.md)
 
 
 ### 复习笔记
