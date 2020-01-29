@@ -7,7 +7,7 @@
  进阶目标：转战leetcode
 
 
-### 算法题分类
+### Laicode算法刷题
  1. [Binary Search](Algorithm/BinarySearch.md)
  2. [Recursion & Sorting](Algorithm/Recursion_Sorting.md)
  3. [LinkedList](Algorithm/LinkedList.md)
@@ -19,7 +19,8 @@
  9. [String II](Algorithm/StringII.md)
  10. [DP](Algorithm/DP.md)
  11. [Bit Operation](Algorithm/Bit.md)
- 12. [Cross-training I](Algorithm/CrossTrainning1.md)
+ 12. [Cross-training I](Algorithm/CrossTraining1.md)
+ 13. [Cross-training II](Algorithm/CrossTraining2.md)
 
 
 ### 复习笔记

@@ -155,7 +155,99 @@ public class Solution {
         return list;
     }
 }
+```
 
+### Lowest Common Ancestor Binary Search Tree I
+```java
+public class Solution {
+    public TreeNode lca(TreeNode root, int p, int q) {
+        int small = Math.min(p, q);
+        int large = Math.max(p, q);
+        while (root != null) {
+            if (root.key < small) {
+                root = root.right;
+            } else if (root.key > large) {
+                root = root.left;
+            } else {
+                return root;
+            }
+        }
+        return null;
+    }
+}
+```
+
+### Lowest Common Ancestor I
+```java
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode one, TreeNode two) {
+        //base case
+        if (root == null) {
+            return null;
+        }
+        //如果当前层的root恰好是one或者two，代表找到了，直接返回
+        if (root == one || root == two) {
+            return root;
+        }
+        TreeNode left = lowestCommonAncestor(root.left, one, two);
+        TreeNode right = lowestCommonAncestor(root.right, one, two);
+
+        if (left != null && right != null) {
+            return root;
+        }
+        return left != null ? left : right;
+    }
+}
+```
+
+
+### Lowest Common Ancestor II
+```java
+public class Solution {
+    /**
+ * public class TreeNodeP {
+ *   public int key;
+ *   public TreeNodeP left;
+ *   public TreeNodeP right;
+ *   public TreeNodeP parent;
+ *   public TreeNodeP(int key, TreeNodeP parent) {
+ *     this.key = key;
+ *     this.parent = parent;
+ *   }
+ * }
+ */
+    public TreeNodeP lowestCommonAncestor(TreeNodeP one, TreeNodeP two) {
+        int left = getNodeHeight(one);
+        int right = getNodeHeight(two);
+
+        if (left <= right) {
+            return mergeNode(one, two, right - left);
+        } else {
+            return mergeNode(two, one, left - right);
+        }
+    }
+
+    private TreeNodeP mergeNode(TreeNodeP high, TreeNodeP low, int diff) {
+        while (diff > 0) {
+            low = low.parent;
+            diff--;
+        }
+        while (low != high) {
+            low = low.parent; 
+            high = high.parent;
+        }
+        return low;
+    }
+
+    private int getNodeHeight(TreeNodeP node) {
+        int height = 0;
+        while (node != null) {
+            height++;
+            node = node.parent;
+        }
+        return height;
+    }
+}
 ```
 
 
@@ -210,5 +302,4 @@ public class Solution {
         return res;
     }
 }
-
 ```
