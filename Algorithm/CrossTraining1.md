@@ -303,3 +303,115 @@ public class Solution {
     }
 }
 ```
+
+
+### Closest Number In Binary Search Tree II
+
+```java
+
+```
+
+
+### Lowest Common Ancestor IV
+跟最基本的找LCA方法差不多。  
+几个基本思想：
+1. 首先recursion最根本的就是在每一层中记住这一层的root和它的左右子树传上来的内容
+2. 如果在当前层，root的左边能找到目标node，右边也能找到，那就应该返回这个root给上一层
+3. 如果左右子树中有一个是null，就应该返回不是null的那个node给上一层
+4. 一旦找到某一个node是目标node，就无需再走该node的子树，因为它下面的所有目标node的LCA至少也都是这个node
+```java 
+public class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, List<TreeNode> nodes) {
+        Set<TreeNode> set = new HashSet<>(nodes);
+        return helper(root, set);
+    }
+
+    private TreeNode helper(TreeNode root, Set<TreeNode> set) {
+        if (root == null) {
+            return root;
+        }
+        if (set.contains(root)) {
+            return root;
+        }
+        TreeNode l = helper(root.left, set);
+        TreeNode r = helper(root.right, set);
+
+        if (l != null && r != null) {
+            return root;
+        }
+        return l != null ? l : r;
+    }
+}
+```
+
+### Lowest Common Ancestor V
+思路：LCA核心思想就是去找target node  
+这一题中可能存在很多个叉儿，对于每一个root来讲，至少要有两个叉儿找了target，才能返回这一层root，否则只找到一个的话只能返回找到的那个node
+```java
+/**
+ * public class KnaryTreeNode {
+ *     int key;
+ *     List<KnaryTreeNode> children;
+ *     public KnaryTreeNode(int key) {
+ *         this.key = key;
+ *         this.children = new ArrayList<>();
+ *     }
+ * }
+ */
+public class Solution {
+    public KnaryTreeNode lowestCommonAncestor(KnaryTreeNode root, KnaryTreeNode a, KnaryTreeNode b) {
+        if (root == null) {
+            return root;
+        }
+        if (root == a || root == b) {
+            return root;
+        }
+        KnaryTreeNode found = null;
+        for (KnaryTreeNode node : root.children) {
+            KnaryTreeNode goToFindTarget = lowestCommonAncestor(node, a, b);
+            if (goToFindTarget == null) { //didn't find the target
+                continue; //没找到就去下一个叉儿找
+            }
+            if (found == null) { //到这一步说明找到了，但是要看看是找到的第几个，如果是第一个，那就直接赋值给found
+                found = goToFindTarget; 
+            } else {//如果found已经有值了，说明这是找到的第二个，那么LCA一定是这一层的root，直接返回root即可
+                return root;
+            }
+        }
+        return found; // 否则返回found
+    }
+}
+```
+
+### Lowest Common Ancestor VI
+
+```java
+public class Solution {
+    public KnaryTreeNode lowestCommonAncestor(KnaryTreeNode root, List<KnaryTreeNode> nodes) {
+        Set<KnaryTreeNode> set = new HashSet<>(nodes);
+        return helper(root, set);
+    }
+
+    private KnaryTreeNode helper(KnaryTreeNode root, Set<KnaryTreeNode> set) {
+        if (root == null) {
+            return root;
+        }
+        if (set.contains(root)) {
+            return root;
+        }
+        KnaryTreeNode found = null;
+        for (KnaryTreeNode node : root.children) {
+            KnaryTreeNode goToFindTarget = helper(node, set);
+            if (goToFindTarget == null) { //didn't find the target
+                continue; //没找到就去下一个叉儿找
+            }
+            if (found == null) { //到这一步说明找到了，但是要看看是找到的第几个，如果是第一个，那就直接赋值给found
+                found = goToFindTarget; 
+            } else {//如果found已经有值了，说明这是找到的第二个，那么LCA一定是这一层的root，直接返回root即可
+                return root;
+            }
+        }
+        return found; // 否则返回found
+    }
+}
+```
