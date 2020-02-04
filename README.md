@@ -19,8 +19,9 @@
  9. [String II](Algorithm/StringII.md)
  10. [DP](Algorithm/DP.md)
  11. [Bit Operation](Algorithm/Bit.md)
- 12. [Cross-training I](Algorithm/CrossTraining1.md)
- 13. [Cross-training II](Algorithm/CrossTraining2.md)
+ 12. [Recursion](Algorithm/Recursion%20II.md)
+ 13. [Cross-training I](Algorithm/CrossTraining1.md)
+ 14. [Cross-training II](Algorithm/CrossTraining2.md)
 
 
 ### 复习笔记
