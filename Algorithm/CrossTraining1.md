@@ -384,7 +384,6 @@ public class Solution {
 ```
 
 ### Lowest Common Ancestor VI
-
 ```java
 public class Solution {
     public KnaryTreeNode lowestCommonAncestor(KnaryTreeNode root, List<KnaryTreeNode> nodes) {
