@@ -1,3 +1,5 @@
+## DP I
+
 ### Fibonacci Number
 ```java
 public class Solution {
@@ -83,4 +85,64 @@ public class Solution {
     }
 }
 
+```
+
+
+## DP II
+
+### Array Hopper II
+DP的思路，从后向前做，小于零则为false，如果大于零，则表示为true并且跳到为true的格子最小的步数
+```java
+public class Solution {
+    public int minJump(int[] array) {
+        int[] M = new int[array.length];
+        M[array.length - 1] = 0;
+        for (int i = array.length - 2; i >= 0; i--) {
+            if (array[i] <= 0) {
+                M[i] = -1;
+            } else {
+                int min = Integer.MAX_VALUE;
+                for (int j = i + 1; j <= i + array[i]; j++) {
+                    if (j < array.length && M[j] >= 0) {
+                        min = Math.min(min, M[j]); 
+                    }
+                }
+                M[i] = min + 1;
+            }
+        }
+        return M[0] < 0 ? -1 : M[0];
+    }   
+}
+```
+
+
+### Largest SubArray Sum
+这一题个人感觉很有意思，也很基础。用DP的思维可以非常快的得到结果。这一题的物理意义需要声明清楚，M[i]代表以i为end，包括i这个值在内的subarray的最大的sum是多少
+```java
+public class Solution {
+    public int largestSum(int[] array) {
+        int[] M = new int[array.length];
+        M[0] = array[0];
+        int globalMax = M[0];
+        for (int i = 1; i < array.length; i++) {
+            M[i] = M[i - 1] >= 0 ? M[i - 1] + array[i] : array[i];
+            globalMax = Math.max(M[i], globalMax);
+        }
+        return globalMax;
+    }
+}
+```
+空间复杂度可以进一步优化到O(1)，因为我们只需要回头看M[i - 1]的值，所以把这个值记录下来即可
+```java
+public class Solution {
+    public int largestSum(int[] array) {
+        int prev = array[0];
+        int globalMax = prev;
+        for (int i = 1; i < array.length; i++) {
+            prev = Math.max(array[i], prev + array[i]);
+            globalMax = Math.max(prev, globalMax);
+        }
+        return globalMax;
+    }
+}
 ```

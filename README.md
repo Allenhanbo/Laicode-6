@@ -17,9 +17,9 @@
  7. [DFS](Algorithm/DFS.md)
  8. [HashTable & String](Algorithm/HashTable_String.md)
  9. [String II](Algorithm/StringII.md)
- 10. [DP](Algorithm/DP.md)
- 11. [Bit Operation](Algorithm/Bit.md)
- 12. [Recursion](Algorithm/Recursion%20II.md)
+ 10. [Bit Operation](Algorithm/Bit.md)
+ 11. [Recursion II](Algorithm/Recursion%20II.md)
+ 12. [DP](Algorithm/DP.md)
  13. [Cross-training I](Algorithm/CrossTraining1.md)
  14. [Cross-training II](Algorithm/CrossTraining2.md)
 
