@@ -146,3 +146,93 @@ public class Solution {
     }
 }
 ```
+
+
+### Dictionary Word I
+这一题有些难度，主要是运用DP的左大段，右小段的思想。左大段从历史的数据中可以直接读出来
+
+值得注意的一个地方是，这个M数组的长度比input的长度多了1，但是它的初始值仍然需要用，并且初始值要设置为true
+```java
+public class Solution {
+    public boolean canBreak(String input, String[] dict) {
+        Set<String> dictionary = toSet(dict);
+        boolean[] M = new boolean[input.length() + 1];
+        M[0] = true;
+        for (int i = 1; i < M.length; i++) {
+            for (int j = i - 1; j >= 0; j--) { //等于0的一次iteration就是一刀都不切的情况
+                //左大段，右小段 也可以写成 for (int j = 0; j < i; j++) 相当于把切的顺序换成了从左到右
+                if (M[j] && dictionary.contains(input.substring(j, i))) {
+                    M[i] = true;
+                    break;
+                }
+            }
+        }
+        return M[input.length()];
+    }
+    private Set<String> toSet(String[] dict) {
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < dict.length; i++) {
+            set.add(dict[i]);
+        }
+        return set;
+    }
+}
+```
+
+### Edit Distance
+思路：这一题其实是二维DP题，但是解题思路并不是很直观。
+```java
+public class Solution {
+    public int editDistance(String one, String two) {
+        int row = one.length();
+        int col = two.length();
+        int[][] M = new int[row + 1][col + 1];
+        for (int i = 0; i <= row; i++) {
+            M[i][0] = i;
+        }
+        for (int i = 0; i <= col; i++) {
+            M[0][i] = i;
+        }
+        for (int i = 1; i <= row; i++) {
+            for (int j = 1; j <= col; j++) {
+                if (one.charAt(i - 1) == two.charAt(j - 1)) {
+                    M[i][j] = M[i - 1][j - 1];
+                    continue;
+                }
+                M[i][j] = Math.min(M[i - 1][j - 1] + 1, M[i][j - 1] + 1);
+                M[i][j] = Math.min(M[i - 1][j] + 1, M[i][j]);
+            }
+        }
+        return M[row][col];
+    }
+}
+```
+
+
+### Largest Square Of 1s
+思路：心中画一个2D的matrix，这一题的DP解法，初始值是最上面一行和最左侧一列，他们在M中的值，就是自身的值因为他们无法构成比自身还要大的正方形了
+
+对于M中的每一个值的物理意义是，以M[i][j]为右下角，能画出来的最大的正方形的边长
+```java
+public class Solution {
+    public int largest(int[][] matrix) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+        int[][] M = new int[row][col];
+        int globalMax = 0;
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (i == 0 || j == 0) {
+                    M[i][j] = matrix[i][j];
+                } else if (matrix[i][j] == 1) {
+                    M[i][j] = Math.min(M[i - 1][j - 1] + 1, M[i - 1][j] + 1);
+                    M[i][j] = Math.min(M[i][j - 1] + 1, M[i][j]);
+                }
+                globalMax = Math.max(M[i][j], globalMax);
+            }
+        }
+        return globalMax;
+    }
+}
+```
