@@ -236,3 +236,250 @@ public class Solution {
     }
 }
 ```
+
+
+## DP III
+> DP III从头到位都是循序渐进的，主要是如何把二维的DP利用一维的思路去解决。
+### Quiz: Largest SubArray Sum
+这一题是DP II中一题的follow up，在返回最大subArray的和的时候，同时返回该最大subArray的左右边界index。
+
+思路主要就是思考两个问题
+1. 什么时候更新curr左指针
+2. 什么时候更新最大subarray的和以及其左右指针
+
+1. 在“另起炉灶”的时候更新左指针，此时的左指针就是当前值的index。如果“继承遗产”则不需要更新左指针。
+2. 在每次做完决定，是“另起炉灶”还是“继承遗产”之后，判断一下当前的sum和存储的globalMax的sum，如果当前sum较大，则需要更新globalMax的sum，同时更新其左右指针。
+```java
+public class Solution {
+    public int[] largestSum(int[] array) {
+        int globalLeft = 0; 
+        int globalRight = 0; 
+        int globalMax = array[0];
+        int currLeft = 0;
+        int sum = array[0]; 
+        for (int i = 1; i < array.length; i++) {
+        if (sum >= 0) {
+            sum += array[i];
+        } else {
+            sum = array[i];
+            currLeft = i;
+        }
+        if (sum > globalMax) {
+            globalRight = i;
+            globalLeft = currLeft;
+            globalMax = sum;
+        }
+        
+        }
+        return new int[]{globalMax, globalLeft, globalRight};
+    }
+}
+```
+
+### Longest Consecutive 1s
+思路：主要看当前array中的值，如果是1就看看前面最长的值+1， 如果是0就东山再起。
+每次如果是1的话都看看longest是否需要更新。
+```java
+public class Solution {
+    public int longest(int[] array) {
+        int longest = 0;
+        int curr = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == 1) {
+                curr += 1;
+                longest = Math.max(longest, curr);
+            } else {
+                curr = 0;
+            }
+        }
+        return longest;
+    }
+    
+}
+```
+
+### Longest Cross Of 1s
+思路：从四个方向，分别先做一遍DP，意义是对于任意一个matrix中的值，都能够O(1)的时间读出它的四个手臂最长的长度。然后把四个长度的手臂取最小值。最后返回这些最小值中的最大值。
+
+这一题的答案解法写得非常好看，因为它把从左上角和从右下角开始便利的时候，每次都填写了两个DP的表格。从左上角开始的时候，相当于从上或者从左测扫，右下角相对应是从右或者从下扫。在每次扫完两个方向后，利用一个merge函数，把DP的matrix两两比较，取对应位置的较小值。同时记录一个最小值中的最大值，这样最后一次比较的时候，可以直接返回这个最大值。
+```java
+public class Solution {
+    public int largest(int[][] matrix) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+        if (row == 0 || col == 0) {
+            return 0;
+        }
+        int[][] upLeft = upLeft(matrix, row, col);
+        int[][] downRight = downRight(matrix, row, col);
+
+        return merge(upLeft, downRight);
+    }
+
+    private int merge(int[][] one, int[][] two) {
+        int result = 0;
+        for (int i = 0; i < one.length; i++) {
+            for (int j = 0; j < one[0].length; j++) {
+                one[i][j] = Math.min(one[i][j], two[i][j]);
+                result = Math.max(result, one[i][j]);
+            }
+        }
+        return result;
+    }
+
+
+    private int[][] upLeft(int[][] matrix, int row, int col) {
+        int[][] up = new int[row][col];
+        int[][] left = new int[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (matrix[i][j] == 1) {
+                    if (i == 0 && j == 0) {
+                        up[i][j] = 1;
+                        left[i][j] = 1;
+                    } else if (i == 0) {
+                        up[i][j] = 1;
+                        left[i][j] = left[i][j - 1] + 1;
+                    } else if (j == 0) {
+                        up[i][j] = up[i - 1][j] + 1;
+                        left[i][j] = 1;
+                    } else {
+                        up[i][j] = up[i - 1][j] + 1;
+                        left[i][j] = left[i][j - 1] + 1;
+                    }
+                }
+            }
+        }
+        merge(up, left);
+        return up;
+    }
+
+    private int[][] downRight(int[][] matrix, int row, int col) {
+        int[][] down = new int[row][col];
+        int[][] right = new int[row][col];
+        
+        for (int i = row - 1; i >= 0; i--) {
+            for (int j = col - 1; j >= 0; j--) {
+                if (matrix[i][j] == 1) {
+                    if (i == row - 1 && j == col - 1) {
+                        down[i][j] = 1;
+                        right[i][j] = 1;
+                    } else if (i == row - 1) {
+                        down[i][j] = 1;
+                        right[i][j] = right[i][j + 1] + 1;//不能忘记，如果是回头看的时候，当前格子是之前的值还要 + 1
+                    } else if (j == col - 1) {
+                        down[i][j] = down[i + 1][j] + 1;
+                        right[i][j] = 1;
+                    } else {
+                        down[i][j] = down[i + 1][j] + 1;
+                        right[i][j] = right[i][j + 1] + 1;
+                    }
+                }
+            }
+        }
+        merge(down, right);
+        return down;
+    }
+}
+```
+
+### Largest Square Surrounded By One
+思路：先利用DP，计算左手臂和上手臂的长度，以每次的点为matrix的右下角，然后看这个matrix的左边和上边是否也都是1，可以直接读表得出，只要对应角落的点上的值，大于或等于最大的可能的边长即可
+```java
+public class Solution {
+    public int largestSquareSurroundedByOne(int[][] matrix) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+        if (row == 0 || col == 0) {
+            return 0;
+        }
+        int[][] left = new int[row + 1][col + 1];
+        int[][] up = new int[row + 1][col + 1];
+        int result = 0;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (matrix[i][j] == 1) {
+                    left[i + 1][j + 1] = left[i + 1][j] + 1;
+                    up[i + 1][j + 1] = up[i][j + 1] + 1;
+
+                    for (int maxLength = Math.min(left[i + 1][j + 1], up[i + 1][j + 1]); maxLength >= 1; maxLength--) {
+                        if (left[i + 2 - maxLength][j + 1] >= maxLength && up[i + 1][j + 2 - maxLength] >= maxLength) {
+                            result = Math.max(result, maxLength);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+}
+```
+
+### Largest X Of 1s
+思路：跟正十字型的题目一样，只要换一下DP的方向从四个角落的方向去做DP
+```java
+public class Solution {
+    public int largest(int[][] matrix) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+        if (row == 0 || col == 0) {
+            return 0;
+        }
+
+        int[][] upRight = upRight(matrix, row, col);
+        int[][] downLeft = downLeft(matrix, row, col);
+
+        return merge(upRight, downLeft, row, col);
+    }
+
+    private int merge(int[][] one, int[][] two, int row, int col) {
+        int result = 0;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                one[i][j] = Math.min(one[i][j], two[i][j]);
+                result = Math.max(result, one[i][j]);
+            }
+        }
+        return result;
+    }
+
+    private int[][] upRight(int[][] matrix, int row, int col) {
+        int[][] up = new int[row][col];
+        int[][] right = new int[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                if (matrix[i][j] == 1) {
+                    up[i][j] = getNumber(up, i - 1, j + 1, row, col) + 1;
+                    right[i][j] = getNumber(right, i - 1, j - 1, row, col) + 1;
+                }
+            }
+        }
+        merge(up, right, row, col);
+        return up;
+    }
+
+    private int[][] downLeft(int[][] matrix, int row, int col) {
+        int[][] down = new int[row][col];
+        int[][] left = new int[row][col];
+        for (int i = row - 1; i >= 0; i--) {
+            for (int j = col - 1; j >= 0; j--) {
+                if (matrix[i][j] == 1) {
+                    down[i][j] = getNumber(down, i + 1, j + 1, row, col) + 1;
+                    left[i][j] = getNumber(left, i + 1, j - 1, row, col) + 1;
+                }
+            }
+        }
+        merge(down, left, row, col);
+        return down;
+    }
+
+    private int getNumber(int[][] matrix, int i, int j, int row, int col) {
+        if (i < 0 || i >= row || j < 0 || j >= col) {
+            return 0;
+        }
+        return matrix[i][j];
+    }
+}
+
+```
