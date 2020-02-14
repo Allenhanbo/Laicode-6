@@ -483,3 +483,74 @@ public class Solution {
 }
 
 ```
+
+
+### Largest SubMatrix Sum
+思路：这一题答案的写法是time：n^3的写法，但是一般情况下很难想到。  
+
+所以我先用n^4的写法来写，主要是利用DP来优化读取matrix的sum，利用DP先把matrix中，以任意值为右下角，以0，0为左上角的matrix的最大sum值算出来
+```java
+public class Solution {
+    public static void main(String[] args) {
+        Solution test = new Solution();
+        int[][] matrix = new int[][]{
+                {-3,2,3},
+                {4,5,6},
+                {7,8,-90}
+        };
+        int row = matrix.length;
+        int col = matrix[0].length;
+        int[][] M = test.DP(matrix, row,col);
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++){
+                System.out.print(M[i][j] + " ");
+            }
+            System.out.println("");
+        }
+        System.out.println(test.largest(matrix));
+    }
+
+    public int largest(int[][] matrix) {
+        int row = matrix.length;
+        int col = matrix[0].length;
+        int[][] M = DP(matrix, row, col);
+        int result = Integer.MIN_VALUE;
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                for (int length = 1; length <= j + 1; length++) {
+                    for (int height = 1; height <= i + 1; height++) {
+                        //int sum = M[i][j] - M[i - height][j] - M[i][j - length + 1] + M[i - height + 1][j - length + 1];
+                        //利用getNumber函数，去处理当长度和高度超过边界的情况
+                        int sum = M[i][j] - getNumber(M, i - height, j) - getNumber(M, i, j - length) + getNumber(M, i - height, j - length);
+                        result = Math.max(result, sum);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    
+    private int getNumber(int[][] M, int row, int col) {
+        if (row < 0 || row >= M.length || col < 0 ||col >= M[0].length) {
+            return 0;
+        }
+        return M[row][col];
+    }
+
+    private int[][] DP (int[][] matrix, int row, int col) {
+        int[][] M = new int[row][col];
+        for (int i = 0; i < row; i++) {
+            int currSum = 0;
+            for (int j = 0; j < col; j++) {
+                currSum += matrix[i][j];
+                if (i == 0) {
+                    M[i][j] = currSum;
+                } else {
+                    M[i][j] = currSum + M[i - 1][j];
+                }
+            }
+        }
+        return M;
+    }
+}
+```
