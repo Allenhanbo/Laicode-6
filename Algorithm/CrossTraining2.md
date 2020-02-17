@@ -296,3 +296,135 @@ public class Solution {
     }
 }
 ```
+
+
+### Get Count Array
+[解题思路：利用merge sort的性质巧妙解决](https://segmentfault.com/a/1190000012866241)  
+time:O(nlogn)  
+space:O(1)
+```java
+public class Solution {
+    public int[] countArray(int[] array) {
+        int[] indexArray = toIndexArray(array);
+        int[] countArray = new int[array.length];
+        int[] helper = new int[array.length];
+        mergeSort(array, indexArray, countArray, helper, 0, array.length  - 1);
+        return countArray;
+    }
+    private int[] toIndexArray(int[] array) {
+        int[] indexArray = new int[array.length];
+        for (int i = 0; i < array.length; i++) {
+            indexArray[i] = i;
+        }
+        return indexArray;
+    }
+
+    private void mergeSort(int[] array, int[] indexArray, int[] countArray, int[] helper, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+
+        int mid = left + (right - left) / 2;
+        mergeSort(array, indexArray, countArray, helper, left, mid);
+        mergeSort(array, indexArray, countArray, helper, mid + 1, right);
+        merge(array, indexArray, countArray, helper, left, mid, right);
+    }
+
+    private void merge (int[] array, int[] indexArray, int[] countArray, int[] helper, int left, int mid, int right) {
+         copyArray(indexArray, helper, left, right);
+         int l = left; 
+         int r = mid + 1;
+         int curr = left;
+         while (l <= mid) {
+             if(r > right || array[helper[l]] <= array[helper[r]]) {
+                 countArray[helper[l]] += r - (mid + 1);
+                 indexArray[curr++] = helper[l++];
+             } else {
+                 indexArray[curr++] = helper[r++];
+             }
+         }
+    }
+
+    private void copyArray (int[] indexArray, int[] helper, int left, int right) {
+        for (int i = left; i <= right; i++) {
+            helper[i] = indexArray[i];
+        }
+    }
+}
+```
+
+
+### 3 Sum
+思路：利用了双指针，并且要将原数组排序，才能去除重复元素造成的影响。 
+
+最外层的for loop，确定下来第一个值，然后while循环里面做的其实就是two sum， 利用首尾指针相加。
+在while循环里面，left指针如果在匹配上之后，left++，然后要check是否还是一样的值，因为第一个第二个数都确定的情况下，3sum的组合就已经是唯一的了，再出现相同的值就是重复了。
+```java
+public class Solution {
+    public List<List<Integer>> allTriples(int[] array, int target) {
+        List<List<Integer>> result = new ArrayList();
+        Arrays.sort(array);
+        for (int i = 0; i < array.length - 2; i++) {
+            //首先去除元素的重复
+            if (i > 0 && array[i] == array[i - 1]) {
+                continue;
+            }
+            int remain = target - array[i];
+            //确定第一个元素后，在其后面的所有元素中做 2 sum
+            int left = i + 1;
+            int right = array.length - 1;
+            while (left < right) {
+                int twoSum = array[left] + array[right];
+                if (twoSum == remain) {
+                    result.add(Arrays.asList(array[i], array[left], array[right]));
+                    left++;
+                    while (left < right && array[left] == array[left - 1]) { //这个while不能少
+                        left++;
+                    }
+                    right--;
+                } else if (twoSum < remain) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
+        return result;
+    }
+}
+```
+
+
+### 4 Sum
+思路：两两pair，看成是pair的2sum
+```java
+public class Solution {
+    public boolean exist(int[] array, int target) {
+        Map<Integer, Pair> map = new HashMap<>();
+        for (int i = 1; i < array.length; i++) {
+            for (int j = 0; j < i; j++) {
+                int sumPair = array[i] + array[j];
+                //下面的条件需要注意一下，要确保map中匹配上的pair的右index小于当前pair的左index，确保不会重复
+                if (map.containsKey(target - sumPair) && map.get(target - sumPair).right < j) {
+                    return true;
+                }
+                if (!map.containsKey(sumPair)) {
+                    map.put(sumPair, new Pair(j ,i));
+                }
+            }
+        }
+        return false;
+    }
+
+    class Pair {
+        int left;
+        int right; 
+
+        Pair (int left, int right) {
+            this.left = left; 
+            this.right = right;
+        }
+    }
+}
+
+```
