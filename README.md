@@ -1,10 +1,15 @@
-# Laicode
- 
- ### laicode算法班刷题  
+# Laicode刷题
 
  包括题目，解题思路，code。主要帮助自己练习代码刷题。
  初步阶段目标：把laicode题刷一遍  
  进阶目标：转战leetcode
+
+### 2.17-2.23刷题计划
+1. Laicode Sampling (7题)
+2. leetcode DFS (5题)
+![3FT9Ln.md.png](https://s2.ax1x.com/2020/02/18/3FT9Ln.md.png)
+1.  leetcode BFD (5题)
+![3FT5kV.md.png](https://s2.ax1x.com/2020/02/18/3FT5kV.md.png)
 
 
 ### Laicode算法刷题
